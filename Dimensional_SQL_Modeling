@@ -1,0 +1,125 @@
+--Code for importing the original csv file
+COPY public."View_All"("Index", "Datetime", "Open", "High", "Low", "Close", "Volume", "Dividends", "Stocksplits", "Ticker")
+--FROM 'C:\Users\scebk\OneDrive\Documents\Masters\MIS541\Week3\Tickers_View.csv'
+FROM 'C:\Tickers_View.csv'
+DELIMITER ',' CSV HEADER;
+
+--Creating the fact table
+SELECT "Index", "Ticker", "Datetime", "Open", "High", "Low", "Close", "Volume"
+FROM public."View_All";
+
+--Creating the Dim_Date table
+SELECT DISTINCT "Datetime"
+,EXTRACT(YEAR FROM "Datetime") AS "Year"
+,EXTRACT(MONTH FROM "Datetime") AS "Month"
+,EXTRACT(DAY FROM "Datetime") AS "Day"
+,TO_CHAR("Datetime", 'Day') AS "Weedkday"
+,EXTRACT(HOUR FROM "Datetime") AS "Hour"
+FROM public."View_All";
+
+--Creating the Dim_Ticker table
+SELECT DISTINCT "Ticker"
+,CASE 
+WHEN "Ticker" = 'NVDA' THEN 'NVIDIA'
+WHEN "Ticker" = 'MSFT' THEN 'Microsoft'
+WHEN "Ticker" = 'AAPL' THEN 'Apple'
+WHEN "Ticker" = 'GOOG' THEN 'Google'
+WHEN "Ticker" = 'AMZN' THEN 'Amazon'
+WHEN "Ticker" = 'META' THEN 'Meta'
+WHEN "Ticker" = '2222.SR' THEN 'Saudi Aramco'
+WHEN "Ticker" = 'AVGO' THEN 'Broadcom'
+WHEN "Ticker" = 'TSM' THEN 'TSMC'
+WHEN "Ticker" = 'BRK-B' THEN 'Berkshire Hathway'
+WHEN "Ticker" = 'TSLA' THEN 'Tesla'
+WHEN "Ticker" = 'JPM' THEN 'JP Morgan Chase'
+WHEN "Ticker" = 'WMT' THEN 'Walmart'
+WHEN "Ticker" = 'ORCL' THEN 'Oracle'
+WHEN "Ticker" = 'LLY' THEN 'Eli Lilly'
+WHEN "Ticker" = 'V'THEN 'Visa'
+WHEN "Ticker" = 'TCEHY' THEN 'Tencent'
+WHEN "Ticker" = 'MA' THEN 'Mastercard'
+WHEN "Ticker" = 'NFLX' THEN 'Netflix'
+WHEN "Ticker" = 'XOM' THEN 'Exxon Mobil'
+WHEN "Ticker" = 'COST' THEN 'Costco'
+WHEN "Ticker" = 'JNJ' THEN 'Johnson & Johnson'
+WHEN "Ticker" = 'HD' THEN 'Home Depot'
+WHEN "Ticker" = 'PLTR' THEN 'Palantir'
+WHEN "Ticker" = 'PG' THEN 'Proctor & Gamble'
+ELSE 'Unknown'
+END AS "Company_Name"
+,CASE 
+WHEN "Ticker" = 'NVDA' THEN 'Technology'
+WHEN "Ticker" = 'MSFT' THEN 'Technology'
+WHEN "Ticker" = 'AAPL' THEN 'Technology'
+WHEN "Ticker" = 'GOOG' THEN 'Communication Services'
+WHEN "Ticker" = 'AMZN' THEN 'Consumer Cyclical'
+WHEN "Ticker" = 'META' THEN 'Communication Services'
+WHEN "Ticker" = '2222.SR' THEN 'Energy'
+WHEN "Ticker" = 'AVGO' THEN 'Technology'
+WHEN "Ticker" = 'TSM' THEN 'Technology'
+WHEN "Ticker" = 'BRK-B' THEN 'Financial Services'
+WHEN "Ticker" = 'TSLA' THEN 'Consumer Discretionary'
+WHEN "Ticker" = 'JPM' THEN 'Consumer Staples'
+WHEN "Ticker" = 'WMT' THEN 'Consumer Staples'
+WHEN "Ticker" = 'ORCL' THEN 'Technology'
+WHEN "Ticker" = 'LLY' THEN 'Healthcare'
+WHEN "Ticker" = 'V'THEN 'Financial Services'
+WHEN "Ticker" = 'TCEHY' THEN 'Technology'
+WHEN "Ticker" = 'MA' THEN 'Financial Services'
+WHEN "Ticker" = 'NFLX' THEN 'Communication Services'
+WHEN "Ticker" = 'XOM' THEN 'Energy'
+WHEN "Ticker" = 'COST' THEN 'Consumer Staples'
+WHEN "Ticker" = 'JNJ' THEN 'Healthcare'
+WHEN "Ticker" = 'HD' THEN 'Consumer Discretionary'
+WHEN "Ticker" = 'PLTR' THEN 'Technology'
+WHEN "Ticker" = 'PG' THEN 'Consumer Staples'
+ELSE 'Unknown'
+END AS "Sector"
+,CASE 
+WHEN "Ticker" = 'NVDA' THEN 'Santa Clara, CA, USA'
+WHEN "Ticker" = 'MSFT' THEN 'Remond, Washington, USA'
+WHEN "Ticker" = 'AAPL' THEN 'Cupertino, California, USA'
+WHEN "Ticker" = 'GOOG' THEN 'Mountain View, California, USA'
+WHEN "Ticker" = 'AMZN' THEN 'Seattle, Washington, USA'
+WHEN "Ticker" = 'META' THEN 'Menlo Park, California, USA'
+WHEN "Ticker" = '2222.SR' THEN 'Dhahran, NA, Saudi Arabia'
+WHEN "Ticker" = 'AVGO' THEN 'San Jose, California, USA'
+WHEN "Ticker" = 'TSM' THEN 'Hsinchu, NA, Taiwan'
+WHEN "Ticker" = 'BRK-B' THEN 'Omaha, Nebraska, USA'
+WHEN "Ticker" = 'TSLA' THEN 'Austin, Texas, USA'
+WHEN "Ticker" = 'JPM' THEN 'New York, New York, USA'
+WHEN "Ticker" = 'WMT' THEN 'Bentonville, Arkansas, USA'
+WHEN "Ticker" = 'ORCL' THEN 'Austin, Texas, USA'
+WHEN "Ticker" = 'LLY' THEN 'Indianapolis, Indiana, USA'
+WHEN "Ticker" = 'V' THEN 'San Francisco, California, USA'
+WHEN "Ticker" = 'TCEHY' THEN 'Shenzhen, Guangdong, China'
+WHEN "Ticker" = 'MA' THEN 'Purchase, New York, USA'
+WHEN "Ticker" = 'NFLX' THEN 'Los Gatos, California, USA'
+WHEN "Ticker" = 'XOM' THEN 'Spring, Texas, USA'
+WHEN "Ticker" = 'COST' THEN 'Issaquah, Washington, USA'
+WHEN "Ticker" = 'JNJ' THEN 'New Brunswick, New Jersey, USA'
+WHEN "Ticker" = 'HD' THEN 'Atlanta, Georgia, United States'
+WHEN "Ticker" = 'PLTR' THEN 'Denver, Colorado, USA'
+WHEN "Ticker" = 'PG' THEN 'Cincinnati, Ohio, USA'
+ELSE 'Unknown'
+END AS "Location_raw"
+FROM public."View_All";
+
+--Creating the Dim_Divdend table
+SELECT "Index", "Dividends"
+,CASE WHEN "Dividends" > 0 THEN 'Y'
+ELSE 'N'
+END AS "Dividend_Ind"
+FROM public."View_All";
+
+--Creating the Dim_Stock_Split table
+SELECT "Index", "Stocksplits"
+,CASE WHEN "Stocksplits" > 0 THEN 'Y'
+ELSE 'N'
+END AS "StocksplitsInd"
+FROM public."View_All";
+
+--Creating the Dim_Price_Info table
+COPY public."Dim_Price_Info"("Ticker", "Share_Price", "Market_Cap", "Size_Rank")
+FROM 'C:\Dim_Price_Info.csv'
+DELIMITER ',' CSV HEADER;
